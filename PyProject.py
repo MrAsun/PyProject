@@ -67,7 +67,7 @@ def True_to_exception(value, error):
     # ========== Vector 2
 class Vector2:
     
-        # Initialization
+    # Initialization
     def __init__(self, x, y):
         # Attributes
         self.__x = x
@@ -77,27 +77,21 @@ class Vector2:
     def __call__(self):
         return (self.__x, self.__y)        
 
+
     # Getters and setters
-    #region
-    # Getters
-    def get_x(self):
-        return self.__x
-    def get_y(self):
-        return self.__y  
-    # Setters
+        # Setters
     def set_x(self, x):
         if False_to_exception(type(x, int) or type(x, float), "Type error!!! This attribute can be only int or float!!!"):
             self.__x = x        
     def set_y(self, y):
         if False_to_exception(type(y, int) or type(y, float), "Type error!!! This attribute can be only int or float!!!"):
             self.__y = y  
-    # Register attributes
-    x = property(get_x, set_x)
-    y = property(get_y, set_y)
-    #endregion
+        # Set attributes
+    x = property(lambda self: self.__x, set_x)
+    y = property(lambda self: self.__y, set_y)
+
 
     # Arithmetic
-    #region
     def __add__(self, other):
         if type(other, Vector2):
             return Vector2(self.__x + other.__x, self.__y + other.__y)
@@ -118,11 +112,9 @@ class Vector2:
             return Vector2(self.__x * other.__x, self.__y * other.__y)
         if type(other, int) or type(other, float):
             return Vector2(self.__x * other, self.__y * other)
-    #endregion
 
 
     # Addition
-    #region
         # Distance
     @staticmethod
     def distance(pos1, pos2):
@@ -140,7 +132,6 @@ class Vector2:
     @staticmethod
     def Left():
         return Vector2(-1, 0)
-    #endregion
 
 
 
@@ -153,11 +144,6 @@ class Color:
     # Initialization
     def __init__(self, red, blue, green):
         # Attributes
-        self.__red = 0
-        self.__blue = 0
-        self.__green = 0
-        
-        # Set attributes
         self.__red = red
         self.__blue = blue
         self.__green = green
@@ -166,16 +152,9 @@ class Color:
     def __call__(self):
         return (self.__red, self.__blue, self.__green)        
 
+
     # Getters and setter
-    #region
-    # Getters
-    def get_red(self):
-        return self.__red
-    def get_blue(self):
-        return self.__blue
-    def get_green(self):
-        return self.__green
-    # Settters
+        # Settters
     def set_red(self, red):
         if False_to_exception(type(red, int), "Type error!!! This attribute can be only int!!!"):
             self.__red = red
@@ -185,15 +164,10 @@ class Color:
     def set_green(self, green):
         if False_to_exception(type(green, int), "Type error!!! This attribute can be only int!!!"):
             self.__green = green
-    # Register attributes
-    red = property(get_red, set_red)
-    blue = property(get_blue, set_blue)
-    green = property(get_green, set_green)
-    #endregion
-
-
-
-
+        # Register attributes
+    red = property(lambda self: self.__red, set_red)
+    blue = property(lambda self: self.__blue, set_blue)
+    green = property(lambda self: self.__green, set_green)
 
 
 
@@ -223,20 +197,22 @@ class Color:
 
 #   # ========== Transform
 class transform:
-    # Main
-        # Initialization
+    # Initialization
     def __init__(self):
         # Attributes
+            # Properties
+        self.__enabled = True
+            # Main
         self.__position = Vector2(0, 0)
         self.__size = Vector2(10, 10)
         self.__rotation = 0
-        
-        #
-        self.__enabled = True
+            # Addition
         self.__child_objects = {}
+            # Save last
         self.__last_pos = Vector2(0, 0)
         self.__last_rot = 0
         
+
         # Local axis
         self.__local_axis = {
             "Up" : 90, "Down" : 270, "Right" : 0, "Left" : 180
@@ -244,16 +220,6 @@ class transform:
         
 
     # Getters and setters
-    #region
-        # Getters
-    def get_position(self):
-        return self.__position
-    def get_size(self):
-        return self.__size
-    def get_rotation(self):
-        return self.__rotation
-    def get_enabled(self):
-        return self.__enabled
         # Setters
     def set_position(self, position):
         if False_to_exception(type(position, Vector2), "Type Error!!! This attribute can be only Vector2"):
@@ -268,22 +234,25 @@ class transform:
         if False_to_exception(type(enabled, bool), "Type Error!!! This attribute can be only bool"):
             self.__enabled = enabled
         # Register attributes
-    position = property(get_position, set_position)
-    size = property(get_size, set_size)
-    rotation = property(get_rotation, set_rotation)
-    enabled = property(get_enabled, set_enabled)
-    #endregion
+            # Properties
+    enabled = property(lambda self: self.__enabled, set_enabled)
+            # Main
+    position = property(lambda self: self.__position, set_position)
+    size = property(lambda self: self.__size, set_size)
+    rotation = property(lambda self: self.__rotation, set_rotation)
     
 
-
     # ===== Addition function
+
+        # Child objects
     def set_child_object(self, title, obj):
         self.__child_objects[title] = obj
     def get_child_object(self, title):
         return self.__child_objects[title]
     def del_child_object(self, title):
         self.__child_objects[title] = None
-        # Get local axis
+        
+        # Local axis
     def get_local_axe(self, axis):
         angle = self.__rotation + self.__local_axis[axis]
         axe = Vector2(Math.cos(angle), Math.sin(angle))
@@ -291,34 +260,37 @@ class transform:
     
         # Set rotation to other position
     def look_at(self, other_position):
-            delta_pos = self.position - other_position
+        delta_pos = self.position - other_position
             
-            distance = Vector2.distance(self.position, other_position)
+        distance = Vector2.distance(self.position, other_position)
 
-            sin = delta_pos.y / distance
-            cos = delta_pos.x / distance
+        sin = delta_pos.y / distance
+        cos = delta_pos.x / distance
         
-            angle = Math.get_angle(cos, sin)
+        angle = Math.get_angle(cos, sin)
             
-            self.rotation = angle
+        self.rotation = angle
             
 
 
-    #
+    # Update
     def Update(self):
-        #
+        # Last position
         delta_pos = self.position - self.__last_pos
         self.__last_pos = self.position
         
-        #
+        # Last rotation
         delta_rot = self.rotation - self.__last_rot
         self.__last_rot = self.rotation
 
 
-        #
+        # Set child objects attributes
         for child in self.__child_objects:
-            child_ = self.__child_objects[child]            
+            # Get obj
+            child_ = self.__child_objects[child]    
+            # Check obj
             if child_ != None:
+                # Set attributes
                 child_.transform.position += delta_pos
                 child_.transform.rotation += delta_rot
 
@@ -357,53 +329,48 @@ program_objects = {
 
     # ========== Window
 class Window:
-    
-    #
+    # Initialization
     def __init__(self):
         # Link
         program_objects["window"] = self
+        self.__window = pygame.display.set_mode(self.transform.size())
         
         # Attributes
             # Main
         self.__transform = transform()
-        self.__window = pygame.display.set_mode(self.transform.size())
         self.__title = "PyProject window"
             # Render
         self.__background_color = Color(10, 10, 10)
         
 
-        #
+        # Set settings
         pygame.display.set_caption(self.__title)
 
 
-    # Getters
-    def get_window(self):
-        return self.__window
-    def get_transform(self):
-        return self.__transform
-    def get_background_color(self):
-        return self.__background_color
-    def get_title(self):
-        return self.__title
-    
-    # Setters
+    # Getters and Setters
+        # Setters
     def set_window(self, window):
         raise Exception("Access Error!!! This attribute is only for reading!!!")
     def set_transform(self, transform):
         raise Exception("Access Error!!! This attribute is only for reading!!!")
     def set_background_color(self, background_color):
-        if False_to_exception(type(background_color, Color)):
-            self.__transform.background_color = background_color
+        if False_to_exception(type(background_color, Color), "Type Error!!! This attribute can be only Color!!!"):
+            self.__background_color = background_color
     def set_title(self, title):
         if False_to_exception(type(title, str), "Type Error!!! This attribute can be onlu string!!!"):
             self.__title = title
-            pygame.display.set_caption(self.__title)
+            pygame.display.set_caption(title)
 
     # Register attributes
-    window = property(get_window, set_window)
-    transform = property(get_transform)
-    background_color = property(get_background_color, set_background_color)
-    title = property(get_title, set_title)
+        # Link
+    window = property(lambda self: self.__window, set_window)
+        # Attributes
+    transform = property(lambda self: self.__transform, set_transform)
+    title = property(lambda self: self.__title, set_title)
+        # Render
+    background_color = property(lambda self: self.__background_color, set_background_color)
+
+
 
 
     # Update
@@ -413,12 +380,14 @@ class Window:
 
         # window check
         if (self.window != None):
+            
             # Size
             if (self.window.get_size() != self.transform.size()):
                 self.__window = pygame.display.set_mode(self.transform.size())
                 
             # Background
             self.window.fill(self.background_color())
+
 
 
 
