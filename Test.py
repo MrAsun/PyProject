@@ -30,7 +30,7 @@ class Player:
 
 obj.register_component("Player", Player())
 
-obj.transform.set_child_object("Camera", camera)
+obj.transform.set_child_object("Camera", camera.object)
 
 obj.get_component("Collider").size = Vector2(50, 50)
 

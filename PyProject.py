@@ -230,7 +230,8 @@ class transform:
             delta_pos = position - self.__position
             self.__position = position
             if len(self.__child_objects) != 0:
-                for obj in self.__child_objects.values:
+                for obj_name in self.__child_objects:
+                    obj = self.__child_objects[obj_name]
                     if obj != None:
                         obj.transform.position += delta_pos
     def set_size(self, size):
@@ -238,15 +239,17 @@ class transform:
             delta_size = size - self.__size
             self.__size = size
             if len(self.__child_objects) != 0:
-                for obj in self.__child_objects.values:
+                for obj_name in self.__child_objects:
+                    obj = self.__child_objects[obj_name]
                     if obj != None:
                         obj.transform.size += delta_size
     def set_rotation(self, rotation):
         if False_to_exception(type(rotation, int) or type(rotation, float), "Type Error!!! This attribute can be only int or float"):
-            delta_rotation = rotation - self.__size
+            delta_rotation = rotation - self.__rotation
             self.__rotation = rotation
             if len(self.__child_objects) != 0:
-                for obj in self.__child_objects.values:
+                for obj_name in self.__child_objects:
+                    obj = self.__child_objects[obj_name]
                     if obj != None:
                         obj.transform.rotation += delta_rotation
     def set_enabled(self, enabled):
@@ -376,9 +379,6 @@ class Window:
 
     # Update
     def Update(self):
-        # Transform update
-        self.__transform.Update()        
-
         # window check
         if (self.window != None):
             
@@ -397,6 +397,7 @@ class Window:
 class Camera:
     def __init__(self):
         # Attributes
+        self.object = Object()
         self.transform = transform()
 
 
@@ -408,12 +409,7 @@ class Camera:
         program_objects["camera"] = self
         
 
-
-
-    # Transform update
-    def Update(self):
-        self.transform.Update()      
-
+ 
 
 
 
@@ -520,7 +516,6 @@ class Object:
     def Update(self):
         #
             #
-            self.transform.Update()    
         
             # Update components
             for component_ in self.__components:
@@ -629,11 +624,7 @@ class Collider:
                         self.obj.transform.position.y < obj2.transform.position.y + obj2.get_component("Collider").size.y and self.obj.transform.position.y + self.size.y > obj2.transform.position.y
                         
                         )
-                        
-                        if collision:
-                            print(0)
-    
-
+                                                   
 
 
 
@@ -879,7 +870,6 @@ def Update():
         # Check camera
         if (program_objects["camera"] != None):
                 
-            program_objects["camera"].Update()
             
             # Object update
             for layer in range(min_update_layer, max_update_layer + 1):
