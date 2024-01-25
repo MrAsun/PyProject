@@ -517,6 +517,7 @@ class Object:
 
 # ========== COMPONENTS ==========
 
+
 class component:
     def start(self):
         pass
@@ -838,8 +839,13 @@ class UIElements:
 
 
 
-
-
+class Physic:
+    @staticmethod
+    def Raycast(startPoint, direction, range_, step=1):
+        points = list()
+        for i in range(0, range_, step):           
+            points.append((startPoint + direction * i)())
+        return points
 
 
 
