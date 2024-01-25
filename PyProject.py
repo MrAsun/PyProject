@@ -843,43 +843,6 @@ class Input:
 
 
 
-#   # UI
-class UIElements:
-    #
-    @staticmethod
-    def Text():
-        #
-        text = Object()
-        
-        #
-        text.add_component("Text")
-        text.add_component("UI")
-        
-
-        #
-        text.del_component("Render")
-        
-
-        #
-        text.Text = text.get_component("Text")
-        text.UI = text.get_component("UI")
-
-        #
-        return text
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
