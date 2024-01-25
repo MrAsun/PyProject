@@ -470,8 +470,8 @@ class Object:
     update_layer = property(get_update_layer, set_update_layer)
                 
 
+
     # ----- COMPONENTS -----
-    #region
         # Get component
     def get_component(self, component):
         if component in self.__components:
@@ -486,12 +486,11 @@ class Object:
         if self.__components[component] != None:
             self.__components[component].delete()
             self.__components[component] = None
-    #endregion
+
 
 
 
     # ----- UPDATE SELF -----
-    #region 
     def Update(self):
         #
             #
@@ -502,7 +501,6 @@ class Object:
                 if component != None:
                     if component.enabled:
                         component.update()
-    #endregion
 
 
          
@@ -535,18 +533,28 @@ class component:
         pass
     
     
-    #
+    # Enabled
     def set_enabled(self, enabled):
-        if False_to_exception(type(enabled, bool), ""):
+        if False_to_exception(type(enabled, bool), "Type Error!!! "):
             self.__enabled = enabled
     enabled = property(lambda self: self.__enabled, set_enabled)
 
 
 
-#   #
+
+#   # RENDER
 class render(component):
     pass
 
+
+#   # COLLIDER
+class collider(component):
+    pass
+
+
+#   # PHYSIC BODY
+class physic_body(component):
+    pass
 
 
 
@@ -593,6 +601,8 @@ def Update():
             pygame.quit()
             return False
     return True
+
+
 
 
 
@@ -685,6 +695,7 @@ class Math:
 
 
 
+
 #    # ========== Time
 time_configs = {"start_time" : time.time()}
 
@@ -745,7 +756,8 @@ class Time:
 
 			# Return 
             return delta > current_time
-   
+
+
 
 
 
@@ -755,6 +767,10 @@ class Random:
     @staticmethod
     def range(min_, max_):
         return random.randint(min_, max_)
+
+
+
+
 
 
 #    # ========== Input
@@ -827,8 +843,6 @@ class Input:
 
 
 
-
-
 #   # UI
 class UIElements:
     #
@@ -852,6 +866,22 @@ class UIElements:
 
         #
         return text
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
