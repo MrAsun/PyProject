@@ -378,7 +378,7 @@ class Window:
 
 
     # Update
-    def Update(self):
+    def update(self):
         # window check
         if (self.window != None):
             
@@ -392,6 +392,7 @@ class Window:
 
 
 
+            
 
 #    # ========== Camera
 class Camera:
@@ -444,12 +445,7 @@ class Object:
         # Register
         objects.append(self)
         
-
-        # Static configure
-        self.add_component("Render")
-        self.get_component("Render").mesh = Mesh.square();
-    
-        self.add_component("Collider")
+        
 
     # Getters and setters
         #
@@ -482,31 +478,14 @@ class Object:
             return self.__components[component]
         return None
         # Add new component
-    def add_component(self, component):
-        if component == "Render":
-            self.__components["Render"] = Render(self)
-        if component == "Collider":
-            self.__components["Collider"] = Collider(self)
-        if component == "Physic":
-            self.__components["Physic"] = Physic(self)
-        if component == "Text":
-            self.__components["Text"] = Text(self)
-
-
-        if component == "UI":
-            self.__components["UI"] = UI()
-            program_objects["camera"].transform.set_child_object(str(self), self)
-
-        # Register component
-    def register_component(self, title, component):
-        self.__components[title] = component    
+    def add_component(self, title, component_):
+        self.__components[title] = component_
+        component_.start()
         # Delete component
     def del_component(self, component):
-        if component == "UI":
-            program_objects["camera"].transform.del_child_object(str(self))
+        if self.__components[component] != None:
+            self.__components[component].delete()
             self.__components[component] = None
-
-        self.__components[component] = None
     #endregion
 
 
@@ -521,7 +500,7 @@ class Object:
             for component_ in self.__components:
                 component = self.__components[component_]
                 if component != None:
-                    component.Update()
+                    component.update()
     #endregion
 
 
@@ -538,311 +517,15 @@ class Object:
 
 # ========== COMPONENTS ==========
 
-    # Render
-class Render:
-    # Initialization
-    def __init__(self, obj):
-        self.__mesh = Mesh()
-        self.__color = Color(255, 255, 255)
-                
-        self.__obj = obj
-        
-    # Getters ans setters
-    #region
-        # Getters
-    def get_mesh(self):
-        return self.__mesh
-    def get_color(self):
-        return self.__color
-        # Setters
-    def set_mesh(self, mesh):
-        if False_to_exception(type(mesh, Mesh), "Type Error!!! This attribute can be only Mesh"):
-            mesh.obj = self.__obj
-            self.__mesh = mesh
-    def set_color(self, color):
-        if False_to_exception(type(color, Color), "Type Error!!! This attribute can be only Color"):
-            self.__color = color
-        # Attribute setting
-    mesh = property(get_mesh, set_mesh)
-    color = property(get_color, set_color)
-    #endregion
-
-
-        
-    #
-    def Update(self):
-        self.__mesh.Update()
-        #
-        center = self.__obj.transform.position + program_objects["window"].transform.size/2 - program_objects["camera"].transform.position
-
-        #
-        poses = []
-        for pos in self.mesh.vertices:
-            poses.append((pos.position + center)())
-            
-        #
-        pygame.draw.polygon(program_objects["window"].window, self.color(), poses, 3)
-   
-    
-
-
-
-#    # Collider
-class Collider:
-    # Initialization
-    def __init__(self, obj):
-        self.obj = obj    
-    
-        self.__points = []        
-
-        self.mesh = None
-        
-        #
-        self.center = Vector2(0, 0)
-
-        #
-        self.type = "Rectangle"
-         # Rectangle
-        self.size = Vector2(10, 10)
-        
-        
-    #
-    def Update(self):
-        #
-        if self.type == "Rectangle":
-            #
-            for obj2 in objects:
-                #
-                if obj2.get_component("Collider") != None:
-                    #
-                    if obj2.get_component("Collider").type == "Rectangle":
-                        collision = (
-                            
-                            self.obj.transform.position.x < obj2.transform.position.x + obj2.get_component("Collider").size.x
-                           
-                            and self.obj.transform.position.x + self.size.x > obj2.transform.position.x and
-                        self.obj.transform.position.y < obj2.transform.position.y + obj2.get_component("Collider").size.y and self.obj.transform.position.y + self.size.y > obj2.transform.position.y
-                        
-                        )
-                                                   
-
-
-
-#    # Physic
-class Physic:
-    # Initialization
-    def __init__(self, obj):
-        self.__gravity = Vector2(0, -0.1)
-        
-        #
-        self.velocity = Vector2(0, 0)
-        self.angular_velocity = 0
-        
-        #
-        self.obj = obj
-        
-
-    # Getters and setters
-    #region
-        # Getters
-    def get_gravity(self):
-        return self.__gravity
-        # Setters
-    def set_gravity(self, gravity):
-        if False_to_exception(type(gravity, Vector2), "Type Error!!! This attribute can be only Vector2"):
-            self.__gravity = gravity
-        # Set attributes
-    gravity = property(get_gravity, set_gravity)
-
-    #endregion
-      
-    #
-    def Update(self):
-        # Velocity config
-        self.velocity += self.gravity        
-
-        # Set velocity
-        self.obj.transform.position += self.velocity
-        self.velocity = Vector2(0, 0)
-        
-
-        #
-        self.obj.transform.rotation += self.angular_velocity
-        self.angular_velocity = 0
-
-
-
-#    # Text
-class Text:
-    
-    #
-    def __init__(self, obj):
-        self.__text = "TEXT"
-        self.obj = obj
-        self.color = Color(255,255,255)
-        
-
-
-    # Getters and Setters
-    #region
-        # Getters
-    def get_text(self):
-        self.__text
-        # Setters
-    def set_text(self, text):
-        if False_to_exception(type(text, str), "Type Error!!! This attribute can be only str"):
-            self.__text = text
-        # Set attribute
-    text = property(get_text, set_text)
-    #endregion
-
-
-
-    def Update(self):
-        f1 = pygame.font.Font(None, 36)
-        text = f1.render(self.__text, True, self.color())
-        center = self.obj.transform.position + program_objects["window"].transform.size/2 - program_objects["camera"].transform.position
-        program_objects["window"].window.blit(text, (center)())
-
-
-class UI:
-    def Update(self):
+class component:
+    def start(self):
         pass
-
-
-
-
-
-
-
-
-
-
-
-# ===== classes for OBJECTS ===== 
-
-    # ========== Meshes
-class Mesh:
-    #
-    def __init__(self): 
-        self.vertices = list()
-        self.triangles = list()
-        
-        self.__obj = None
-        self.size = 1
-        # Getters
-    def get_obj(self):
+    
+    def update(self):
         pass
-        # Setters
-    def set_obj(self, obj):
-        self.Reset(obj)
-        #
-        
-        #
-    obj = property(get_obj, set_obj)
     
-
-
-
-    def Reset(self, obj):
-        self.__obj = obj        
-        
-        for vertex in self.vertices:
-            vertex.position /= self.size
-            vertex.position *= obj.transform.size
-            
-            delta_pos = vertex.position - obj.transform.position
-            
-            distance = Vector2.distance(vertex.position, obj.transform.position)
-
-            sin = delta_pos.y / distance
-            cos = delta_pos.x / distance
-        
-            angle = Math.get_angle(cos, sin)
-            
-            angle = angle - obj.transform.rotation
-            
-            vertex.distance = distance
-            vertex.angle = angle
-        self.size = obj.transform.size
-
-
-    def Update(self):
-        if self.size != self.__obj.transform.size:
-            self.set_obj(self.__obj)            
-
-        for vertex in self.vertices:
-            angle = vertex.angle + self.__obj.transform.rotation          
-            sin = Math.sin(angle)
-            cos = Math.cos(angle)
-
-            vertex.position = Vector2(cos * vertex.distance, sin * vertex.distance)
-
-
-    #
-    def square():
-        mesh = Mesh()        
-
-        mesh.vertices.append(Vertex(Vector2(-0.5, -0.5)))
-        mesh.vertices.append(Vertex(Vector2(-0.5, 0.5)))
-        mesh.vertices.append(Vertex(Vector2(0.5, 0.5)))
-        mesh.vertices.append(Vertex(Vector2(0.5, -0.5)))
-        
-        mesh.triangles.append(Triangle(0, 1, 3))
-        mesh.triangles.append(Triangle(0, 2, 3))
-        
-        return mesh
-    
-    #
-    def triangle():
-        mesh = Mesh()        
-
-        mesh.vertices.append(Vertex(Vector2(-0.5, -0.5)))
-        mesh.vertices.append(Vertex(Vector2(0, 0.5)))
-        mesh.vertices.append(Vertex(Vector2(0.5, -0.5)))
-        
-        mesh.triangles.append(Triangle(0, 1, 2))
-        
-        return mesh
-
-
-class Vertex:
-    # Attributes
-    position = Vector2(0, 0)
-    
-    distance = 0
-    angle = 0
-        
-    # Initialization
-    def __init__(self, pos):
-        # position
-        self.position = pos
-
-        
-        
-    # ========== Triangle
-class Triangle:
-    # Attributes
-    vertex1 = 0
-    vertex2 = 1
-    vertex3 = 2
-
-
-    # Initialization
-    def __init__(self, v1, v2, v3):
-        self.vertex1 = v1
-        self.vertex2 = v2
-        self.vertex3 = v3
-
-
-    # Call
-    def __call__(self):
-        return (self.vertex1, self.vertex2, self.vertex3)
-
-
-
-
-
+    def delete(self):
+        pass
 
 
 
@@ -865,7 +548,7 @@ def Update():
     if program_objects["window"] != None: 
         
         # Window update
-        program_objects["window"].Update()
+        program_objects["window"].update()
         
         # Check camera
         if (program_objects["camera"] != None):
