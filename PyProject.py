@@ -500,7 +500,8 @@ class Object:
             for component_ in self.__components:
                 component = self.__components[component_]
                 if component != None:
-                    component.update()
+                    if component.enabled:
+                        component.update()
     #endregion
 
 
@@ -519,17 +520,32 @@ class Object:
 
 
 class component:
+    __enabled = True    
+
+    # When you add 
     def start(self):
         pass
     
+    # Every tick
     def update(self):
         pass
     
+    # Whet you delete
     def delete(self):
         pass
+    
+    
+    #
+    def set_enabled(self, enabled):
+        if False_to_exception(type(enabled, bool), ""):
+            self.__enabled = enabled
+    enabled = property(lambda self: self.__enabled, set_enabled)
 
 
 
+#   #
+class render(component):
+    pass
 
 
 
