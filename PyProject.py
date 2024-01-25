@@ -132,6 +132,10 @@ class Vector2:
     @staticmethod
     def Left():
         return Vector2(-1, 0)
+        # Get direction
+    @staticmethod
+    def Direction(angle):
+        return Vector2(Math.cos(angle), Math.sin(angle))
 
 
 
@@ -223,13 +227,22 @@ class transform:
         # Setters
     def set_position(self, position):
         if False_to_exception(type(position, Vector2), "Type Error!!! This attribute can be only Vector2"):
+            delta_pos = position - self.__position
             self.__position = position
+            for obj in self.__child_objects.keys:
+                obj.transform.position += delta_pos
     def set_size(self, size):
         if False_to_exception(type(size, Vector2), "Type Error!!! This attribute can be only Vector2"):
+            delta_size = size - self.__size
             self.__size = size
+            for obj in self.__child_objects.keys:
+                obj.transform.size += delta_size
     def set_rotation(self, rotation):
         if False_to_exception(type(rotation, int) or type(rotation, float), "Type Error!!! This attribute can be only int or float"):
+            delta_rotation = rotation - self.__size
             self.__rotation = rotation
+            for obj in self.__child_objects.keys:
+                obj.transform.rotation += delta_rotation
     def set_enabled(self, enabled):
         if False_to_exception(type(enabled, bool), "Type Error!!! This attribute can be only bool"):
             self.__enabled = enabled
@@ -246,16 +259,20 @@ class transform:
 
         # Child objects
     def set_child_object(self, title, obj):
-        self.__child_objects[title] = obj
+        if False_to_exception(type(title, str), type(obj, Object), "Type Error!!! Title must be str! Obj must be Object!"):
+            self.__child_objects[title] = obj
     def get_child_object(self, title):
-        return self.__child_objects[title]
+        if self.__child_objects.get(title):
+             return self.__child_objects[title]
+        return None
     def del_child_object(self, title):
+        self
         self.__child_objects[title] = None
         
         # Local axis
     def get_local_axe(self, axis):
         angle = self.__rotation + self.__local_axis[axis]
-        axe = Vector2(Math.cos(angle), Math.sin(angle))
+        axe = Vector2.Direction(angle)
         return axe
     
         # Set rotation to other position
@@ -270,29 +287,7 @@ class transform:
         angle = Math.get_angle(cos, sin)
             
         self.rotation = angle
-            
-
-
-    # Update
-    def Update(self):
-        # Last position
-        delta_pos = self.position - self.__last_pos
-        self.__last_pos = self.position
-        
-        # Last rotation
-        delta_rot = self.rotation - self.__last_rot
-        self.__last_rot = self.rotation
-
-
-        # Set child objects attributes
-        for child in self.__child_objects:
-            # Get obj
-            child_ = self.__child_objects[child]    
-            # Check obj
-            if child_ != None:
-                # Set attributes
-                child_.transform.position += delta_pos
-                child_.transform.rotation += delta_rot
+           
 
 
 
@@ -518,7 +513,6 @@ class Object:
     #region 
     def Update(self):
         #
-        if self.transform.enabled:
             #
             self.transform.Update()    
         
