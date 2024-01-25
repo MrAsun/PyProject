@@ -229,20 +229,26 @@ class transform:
         if False_to_exception(type(position, Vector2), "Type Error!!! This attribute can be only Vector2"):
             delta_pos = position - self.__position
             self.__position = position
-            for obj in self.__child_objects.keys:
-                obj.transform.position += delta_pos
+            if len(self.__child_objects) != 0:
+                for obj in self.__child_objects.values:
+                    if obj != None:
+                        obj.transform.position += delta_pos
     def set_size(self, size):
         if False_to_exception(type(size, Vector2), "Type Error!!! This attribute can be only Vector2"):
             delta_size = size - self.__size
             self.__size = size
-            for obj in self.__child_objects.keys:
-                obj.transform.size += delta_size
+            if len(self.__child_objects) != 0:
+                for obj in self.__child_objects.values:
+                    if obj != None:
+                        obj.transform.size += delta_size
     def set_rotation(self, rotation):
         if False_to_exception(type(rotation, int) or type(rotation, float), "Type Error!!! This attribute can be only int or float"):
             delta_rotation = rotation - self.__size
             self.__rotation = rotation
-            for obj in self.__child_objects.keys:
-                obj.transform.rotation += delta_rotation
+            if len(self.__child_objects) != 0:
+                for obj in self.__child_objects.values:
+                    if obj != None:
+                        obj.transform.rotation += delta_rotation
     def set_enabled(self, enabled):
         if False_to_exception(type(enabled, bool), "Type Error!!! This attribute can be only bool"):
             self.__enabled = enabled
@@ -259,7 +265,7 @@ class transform:
 
         # Child objects
     def set_child_object(self, title, obj):
-        if False_to_exception(type(title, str), type(obj, Object), "Type Error!!! Title must be str! Obj must be Object!"):
+        if False_to_exception(type(title, str) and type(obj, Object), "Type Error!!! Title must be str! Obj must be Object!"):
             self.__child_objects[title] = obj
     def get_child_object(self, title):
         if self.__child_objects.get(title):
@@ -325,11 +331,7 @@ program_objects = {
     # ========== Window
 class Window:
     # Initialization
-    def __init__(self):
-        # Link
-        program_objects["window"] = self
-        self.__window = pygame.display.set_mode(self.transform.size())
-        
+    def __init__(self):        
         # Attributes
             # Main
         self.__transform = transform()
@@ -337,6 +339,10 @@ class Window:
             # Render
         self.__background_color = Color(10, 10, 10)
         
+
+        # Link
+        program_objects["window"] = self
+        self.__window = pygame.display.set_mode(self.transform.size())
 
         # Set settings
         pygame.display.set_caption(self.__title)
@@ -501,7 +507,7 @@ class Object:
         # Delete component
     def del_component(self, component):
         if component == "UI":
-            program_objects["camera"].transform.del_child_object("UI")
+            program_objects["camera"].transform.del_child_object(str(self))
             self.__components[component] = None
 
         self.__components[component] = None
