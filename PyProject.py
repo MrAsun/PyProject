@@ -629,7 +629,7 @@ class Collider:
 
 
 #    # Physic
-class Physic:
+class Rigidbody:
     # Initialization
     def __init__(self, obj):
         self.__gravity = Vector2(0, -0.1)
@@ -1155,8 +1155,13 @@ class UIElements:
 
 
 
-
-
+class Physic:
+    @staticmethod
+    def Raycast(startPoint, direction, range_, step=1):
+        points = list()
+        for i in range(0, range_, step):           
+            points.append((startPoint + direction * i)())
+        return points
 
 
 
