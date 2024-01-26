@@ -12,6 +12,7 @@ from Addition import Color
 from Moduls import Input
 from Moduls import Math
 from Moduls import Random
+from Moduls import Time
 
 
 # Initialization

@@ -6,3 +6,4 @@
 /.vs/PythonSettings.json
 /.vs/slnx.sqlite
 /__pycache__
+*.sqlite-journal
