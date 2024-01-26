@@ -7,3 +7,5 @@
 /.vs/slnx.sqlite
 /__pycache__
 *.sqlite-journal
+/__pycache__/Addition.cpython-311.pyc
+/__pycache__/PyProject.cpython-311.pyc
