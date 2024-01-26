@@ -1,4 +1,5 @@
 # Import
+from pickle import GLOBAL
 import pygame
 import math
 import time
@@ -706,6 +707,7 @@ class Math:
 
 #    # ========== Time
 time_configs = {"start_time" : time.time()}
+last_frame_time = 0
 
 class Time:    
     # ===== Main time management
@@ -725,6 +727,13 @@ class Time:
             if timePoint.timer(time):
                 return True;
 
+    @staticmethod
+    def delta_time():
+        current_time = Time.time()
+        global last_frame_time
+        delta_time = current_time - last_frame_time
+        last_frame_time = Time.time() 
+        return delta_time
 
     # Point in the time
     class time_point:
