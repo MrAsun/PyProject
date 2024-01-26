@@ -24,13 +24,13 @@ pygame.font.init()
 
 
 # ======== ADITION FUNCTIONS ================
-    # Type checking
+#   # Type checking
 def type(variable, type):
         if isinstance(variable, type):
             return True
         return False
 
-# Exceptions
+#   # Exceptions
 def False_to_exception(value, error):
     if not value:
         raise Exception(error)
@@ -41,9 +41,16 @@ def True_to_exception(value, error):
     return False
 
 
+<<<<<<< Updated upstream
 def position_to_World(pos):
     if False_to_exception(type(pos, Vector2), "Type Error!!! Pos can be only Vector2"):
         return pos + program_objects["window"].transform.size/2
+=======
+#   # Positions
+def pos_to_world(pos):
+    if False_to_exception(type(pos, Vector2), ""):
+        return pos + program_objects["window"].transform.size/2 - program_objects["camera"].transform.position
+>>>>>>> Stashed changes
 
 
 
@@ -145,19 +152,21 @@ class Vector2:
 
 
 
+
 #   # ========== Color
 class Color:
     
     # Initialization
     def __init__(self, red, blue, green):
         # Attributes
-        self.__red = red
-        self.__blue = blue
-        self.__green = green
+        self.__red = Math.clamp(red, 0, 255)
+        self.__blue = Math.clamp(blue, 0, 255)
+        self.__green = Math.clamp(green, 0, 255)
         
     # Return self
     def __call__(self):
         return (self.__red, self.__blue, self.__green)        
+
 
 
     # Getters and setter
@@ -215,9 +224,7 @@ class transform:
         self.__rotation = 0
             # Addition
         self.__child_objects = {}
-            # Save last
-        self.__last_pos = Vector2(0, 0)
-        self.__last_rot = 0
+
         
 
         # Local axis
@@ -290,7 +297,7 @@ class transform:
         # Set rotation to other position
     def look_at(self, other_position):
         delta_pos = self.position - other_position
-            
+         
         distance = Vector2.distance(self.position, other_position)
 
         sin = delta_pos.y / distance
@@ -438,9 +445,7 @@ class Object:
     # Initialization
     def __init__(self):
         # Attributes
-        self.__components = {
-        "Render" : None, "Collider" : None, "Physic" : None, "Text" : None, "UI" : None
-        }
+        self.__components = { }
         self.__transform = transform()
         self.__update_layer = 0
         
@@ -474,6 +479,7 @@ class Object:
                 
 
 
+
     # ----- COMPONENTS -----
         # Get component
     def get_component(self, component):
@@ -482,8 +488,8 @@ class Object:
         return None
         # Add new component
     def add_component(self, title, component_):
+        component_.object_ = self
         self.__components[title] = component_
-        component_.object = self
         component_.start()
         # Delete component
     def del_component(self, component):
@@ -496,15 +502,12 @@ class Object:
 
     # ----- UPDATE SELF -----
     def Update(self):
-        #
-            #
-        
-            # Update components
-            for component_ in self.__components:
-                component = self.__components[component_]
-                if component != None:
-                    if component.enabled:
-                        component.update()
+        # Update components
+        for component_ in self.__components:
+            component = self.__components[component_]
+            if component != None:
+                if component.enabled:
+                    component.update()
 
 
          
@@ -519,6 +522,10 @@ class Object:
 
 
 # ========== COMPONENTS ==========
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 class component:
     object = None
     __enabled = True    
@@ -564,6 +571,10 @@ class physic_body(component):
 
 
 
+<<<<<<< Updated upstream
+=======
+                
+>>>>>>> Stashed changes
 
 
 
@@ -624,10 +635,32 @@ def Update():
 
 
 
+<<<<<<< Updated upstream
 # ========== MODULS ==========
+=======
+
+
+
+
+
+
+
+
+# =============== MODULS ===============
+>>>>>>> Stashed changes
 
     # ========== Math
 class Math:
+    # Variables
+    def clamp(value, min_, max_):
+        if value < min_:
+            return min_
+        if value > max_:
+            return max_
+        return value
+            
+    
+
   
     # ===== Angle
     @staticmethod
@@ -716,6 +749,24 @@ class Math:
 
 
 
+<<<<<<< Updated upstream
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> Stashed changes
 #    # ========== Time
 time_configs = {"start_time" : time.time()}
 last_frame_time = 0
@@ -802,6 +853,19 @@ class Time:
 
 
 
+<<<<<<< Updated upstream
+=======
+
+
+
+
+
+
+
+
+
+
+>>>>>>> Stashed changes
 #  # ========== Random
 class Random:
     @staticmethod
@@ -824,6 +888,15 @@ class Random:
 
 
 
+<<<<<<< Updated upstream
+=======
+
+
+
+
+
+
+>>>>>>> Stashed changes
 #    # ========== Input
 class Input:
     # List of keys
