@@ -732,7 +732,7 @@ class Time:
         current_time = Time.time()
         global last_frame_time
         delta_time = current_time - last_frame_time
-        last_frame_time = Time.time() 
+        last_frame_time = Time.time()
         return delta_time
 
     # Point in the time
