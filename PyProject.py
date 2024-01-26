@@ -480,6 +480,7 @@ class Object:
         # Add new component
     def add_component(self, title, component_):
         self.__components[title] = component_
+        component_.object = self
         component_.start()
         # Delete component
     def del_component(self, component):
@@ -518,6 +519,7 @@ class Object:
 
 
 class component:
+    object_ = None
     __enabled = True    
 
     # When you add 
@@ -558,6 +560,11 @@ class physic_body(component):
 
 
 
+
+#   # LIGHT
+class light(component):
+    def start(self):
+        self.radius = 50
 
 
 
