@@ -41,7 +41,9 @@ def True_to_exception(value, error):
     return False
 
 
-
+def position_to_World(pos):
+    if False_to_exception(type(pos, Vector2), "Type Error!!! Pos can be only Vector2"):
+        return pos + program_objects["window"].transform.size/2
 
 
 
@@ -517,10 +519,8 @@ class Object:
 
 
 # ========== COMPONENTS ==========
-
-
 class component:
-    object_ = None
+    object = None
     __enabled = True    
 
     # When you add 
@@ -547,7 +547,10 @@ class component:
 
 #   # RENDER
 class render(component):
-    pass
+    def update(self):
+        pos = position_to_World(self.object.transform.position)
+
+        program_objects["window"].window.set_at((int(pos.x), int(pos.y)), (255, 255, 255))
 
 
 #   # COLLIDER
@@ -561,11 +564,6 @@ class physic_body(component):
 
 
 
-
-#   # LIGHT
-class light(component):
-    def start(self):
-        self.radius = 50
 
 
 
@@ -609,6 +607,9 @@ def Update():
             pygame.quit()
             return False
     return True
+
+
+
 
 
 
@@ -705,6 +706,16 @@ class Math:
 
 
 
+
+
+
+
+
+
+
+
+
+
 #    # ========== Time
 time_configs = {"start_time" : time.time()}
 last_frame_time = 0
@@ -779,11 +790,34 @@ class Time:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 #  # ========== Random
 class Random:
     @staticmethod
     def range(min_, max_):
         return random.randint(min_, max_)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -845,7 +879,6 @@ class Input:
     def get_pos(obj):
         if obj == "Mouse":
             return Vector2(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]) - program_objects["window"].transform.size/2
-
 
 
 
