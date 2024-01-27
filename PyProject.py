@@ -30,29 +30,6 @@ pygame.font.init()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # ======== ADITION FUNCTIONS ================
 #   # Type checking
 def type(variable, type):
@@ -70,6 +47,241 @@ def True_to_exception(value, error):
     if value:
         raise Exception(error)
     return False
+
+
+
+
+
+
+ERRORS = {
+    "Access" : "Access Error!!! This atribute isonly for reading!!!",    
+
+    "Type_1" : "Type Error!!! This attribute can be only - ",
+    
+    "Project_exists" : "Project Error!!! You have not created the Project!!!"
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#   # ========== PROJECT
+project = None
+class Project:
+    __project_objects = {"window" : None, "camera" : None, "scene" : None}
+
+
+    # Initialization
+    def __init__(self):
+        # Link
+        global project
+        project = self
+
+        # Attributes
+            # Main
+        __name = "Project"
+        __company = "DefaultCompany"
+        __version = "v.1"
+            # Objects
+        __project_objects = {"window" : None, "camera" : None}
+
+
+        #
+        scene = Scene("scene")
+        scene.load()
+        
+
+
+    # Getters and setters
+        # Setters
+    def set_name(self, name):
+        self.__name = str(name)
+    def set_company(self, company):
+        self.__company = str(company)
+    def set_version(self, version):
+        self.__version = str(version)
+    #  # Set Attributes
+    name = property(lambda self: self.__name, set_name)
+    company = property(lambda self: self.__company, set_company)
+    version = property(lambda self: self.__version, set_version)
+    
+
+
+    # Add | Set project objects
+        # Add
+    def add_project_object(self, title, obj):
+        self.__project_objects[title] = obj
+        # Get
+    def get_project_object(self, obj):
+        return self.__project_objects[obj]
+
+
+
+
+
+#   # ========== WINDOW
+class Window:
+    # Initialization
+    def __init__(self):   
+        # Check project
+        if False_to_exception(project != None, ERRORS["Project_exists"]):
+            # Attributes
+                # Main
+            self.__transform = transform()
+            self.__title = "PyProject window"
+                # Render
+            self.__background_color = Color(10, 10, 10)
+        
+
+            # Link
+            self.__window = pygame.display.set_mode(self.transform.size())
+            project.add_project_object("window", self)
+
+
+            # Set settings
+            pygame.display.set_caption(self.__title)
+
+
+    # Getters and Setters
+        # Setters
+    def set_window(self, window):
+        raise Exception(ERRORS["Access"])
+    def set_transform(self, transform):
+        raise Exception(ERRORS["Access"])
+    def set_background_color(self, background_color):
+        if False_to_exception(type(background_color, Color), ERRORS["Type_1"] + "Color!!!"):
+            self.__background_color = background_color
+    def set_title(self, title):
+            self.__title = str(title)
+            pygame.display.set_caption(str(title))
+    #    # Set attributes
+        # Link
+    window = property(lambda self: self.__window, set_window)
+        # Attributes
+    transform = property(lambda self: self.__transform, set_transform)
+    title = property(lambda self: self.__title, set_title)
+        # Render
+    background_color = property(lambda self: self.__background_color, set_background_color)
+
+
+
+
+    # Update
+    def update(self):
+        # Check if window exists
+        if (self.window != None):
+            
+            # Update window size if necessary
+            if (self.window.get_size() != self.transform.size()):
+                self.__window = pygame.display.set_mode(self.transform.size())
+                
+            # Fill window with background color
+            self.window.fill(self.background_color())
+
+
+
+
+
+#   # ========== SCENE
+class Scene:
+    # Initialization
+    def __init__(self, name):
+        # Attributes
+        self.__name = name
+        self.__objects = {}
+
+        # Set
+        self.load()
+    
+    # Getters and Setters
+        # Setters
+    def set_name(self, name):
+        self.__name = name
+    #    # Set attributes
+    name = property(lambda self: self.__name, set_name)
+    
+    # Objects
+    def add_obj(self, obj):
+        if False_to_exception(type(obj, Object) or type(obj, Camera), ERRORS["Type_1"] + "Object or Camera!"):
+            self.__objects[str(obj)] = obj
+    def get_obj(self, name):
+        return self.__objects[str(name)]
+    def del_obj(self, obj):
+        self.__objects[str(obj)] = None
+    def get_objects(self):
+        return self.__objects
+
+
+    # Load this scene
+    def load(self):
+        # Project check
+        if False_to_exception(project != None, ERRORS["Project_exists"]):       
+            project.add_project_object("scene", self)
+
+
+
+
+#    # ========== CAMERA
+class Camera:
+    # Initialization
+    def __init__(self):
+        # Project check
+        if False_to_exception(project != None, ERRORS["Project_exists"]):
+            # Attributes
+            self.object = Object()
+            self.transform = transform()
+
+
+
+
+
+    # Set as main camera
+    def set_main(self):
+        # Check project
+        if False_to_exception(project != None, ERRORS["Project_exists"]):
+            project.add_project_object("camera", self)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -121,17 +333,17 @@ class Vector2:
     # Return self
     def __call__(self, center = "CENTER"):
         #
-        if center == "LEFT_UP":
-            return (Vector2(self.x, self.y) + Vector2(-(program_objects["window"].transform.size/2).x, (program_objects["window"].transform.size/2).y))()
+        if center == "LEFT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
+            return (Vector2(self.x, self.y) + Vector2(-(project.get_project_object("window").transform.size/2).x, (project.get_project_object("window").transform.size/2).y))()
         #
-        if center == "LEFT_DOWN":
-            return (Vector2(self.x, self.y) + Vector2(-(program_objects["window"].transform.size/2).x, -(program_objects["window"].transform.size/2).y))()
+        if center == "LEFT_DOWN" and False_to_exception(project != None, ERRORS["Project_exists"]):
+            return (Vector2(self.x, self.y) + Vector2(-(project.get_project_object("window").transform.size/2).x, -(project.get_project_object("window").transform.size/2).y))()
         #
-        if center == "RIGHT_UP":
-            return (Vector2(self.x, self.y) + Vector2((program_objects["window"].transform.size/2).x, (program_objects["window"].transform.size/2).y))()
+        if center == "RIGHT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
+            return (Vector2(self.x, self.y) + Vector2((project.get_project_object("window").transform.size/2).x, (project.get_project_object("window").transform.size/2).y))()
         #
-        if center == "RIGHT_DOWN":
-            return (Vector2(self.x, self.y) + Vector2((program_objects["window"].transform.size/2).x, -(program_objects["window"].transform.size/2).y))()
+        if center == "RIGHT_DOWN" and False_to_exception(project != None, ERRORS["Project_exists"]):
+            return (Vector2(self.x, self.y) + Vector2((project.get_project_object("window").transform.size/2).x, -(project.get_project_object("window").transform.size/2).y))()
         #
         if center == "CENTER":
             return (self.__x, self.__y)     
@@ -203,8 +415,6 @@ class Vector2:
 
 
 
-
-
 #   # ========== Color
 class Color:
     
@@ -237,6 +447,11 @@ class Color:
     blue = property(lambda self: self.__blue, set_blue)
     green = property(lambda self: self.__green, set_green)
     
+
+
+
+
+
 
 
 
@@ -397,135 +612,6 @@ class transform:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ========== PROGRAM CLASSES ==========
-
-    # List of program objects
-program_objects = {
-    "window" : None, "camera" : None
-    }
-
-
-
-
-    # ========== Window
-class Window:
-    # Initialization
-    def __init__(self):        
-        # Attributes
-            # Main
-        self.__transform = transform()
-        self.__title = "PyProject window"
-            # Render
-        self.__background_color = Color(10, 10, 10)
-        
-
-        # Link
-        program_objects["window"] = self
-        self.__window = pygame.display.set_mode(self.transform.size())
-
-        # Set settings
-        pygame.display.set_caption(self.__title)
-
-
-    # Getters and Setters
-        # Setters
-    def set_window(self, window):
-        raise Exception("Access Error!!! This attribute is only for reading!!!")
-    def set_transform(self, transform):
-        raise Exception("Access Error!!! This attribute is only for reading!!!")
-    def set_background_color(self, background_color):
-        if False_to_exception(type(background_color, Color), "Type Error!!! This attribute can be only Color!!!"):
-            self.__background_color = background_color
-    def set_title(self, title):
-        if False_to_exception(type(title, str), "Type Error!!! This attribute can be onlu string!!!"):
-            self.__title = title
-            pygame.display.set_caption(title)
-
-    # Register attributes
-        # Link
-    window = property(lambda self: self.__window, set_window)
-        # Attributes
-    transform = property(lambda self: self.__transform, set_transform)
-    title = property(lambda self: self.__title, set_title)
-        # Render
-    background_color = property(lambda self: self.__background_color, set_background_color)
-
-
-
-
-    # Update
-    def update(self):
-        # window check
-        if (self.window != None):
-            
-            # Size
-            if (self.window.get_size() != self.transform.size()):
-                self.__window = pygame.display.set_mode(self.transform.size())
-                
-            # Background
-            self.window.fill(self.background_color())
-
-
-
-
-            
-
-#    # ========== Camera
-class Camera:
-    def __init__(self):
-        # Attributes
-        self.object = Object()
-        self.transform = transform()
-
-
-
-
-
-    # Set as main camera
-    def set_main(self):
-        program_objects["camera"] = self
         
 
  
@@ -581,9 +667,8 @@ class Camera:
 
 
 # ========== MAIN CLASSES ==========
+
     # ========== Object
-# List of objects
-objects = list()
 min_update_layer = 0
 max_update_layer = 0
 
@@ -597,7 +682,9 @@ class Object:
         
         
         # Register
-        objects.append(self)
+        if False_to_exception(project != None, ERRORS["Project_exists"]):
+            if False_to_exception(project.get_project_object("scene") != None, "Scene doesn`t exist!!!"):
+                project.get_project_object("scene").add_obj(self)
         
         
 
@@ -754,7 +841,7 @@ class render(component):
     # Update
     def update(self):
         pos = self.object.transform.position("RIGHT_UP")
-        program_objects["window"].window.set_at((int(pos[0]), int(pos[1])), self.color())
+        project.get_project_object("window").window.set_at((int(pos[0]), int(pos[1])), self.color())
 
 
 #   # COLLIDER
@@ -796,7 +883,7 @@ class text(component):
     def update(self):
         font = pygame.font.Font(None, int(self.__size))
         text = font.render(self.__text, True, self.__color())
-        program_objects["window"].window.blit(text, self.object.transform.position("RIGHT_UP"))
+        project.get_project_object("window").window.blit(text, self.object.transform.position("RIGHT_UP"))
 
 
 
@@ -847,30 +934,29 @@ class text(component):
 # ========== MAIN FUNCTIONS ==========
 
 def Update():
-    # Check window
-    if program_objects["window"] != None: 
+    # Check project
+    if project != None:
         
-        # Window update
-        program_objects["window"].update()
-        
-        # Check camera
-        if (program_objects["camera"] != None):
-                
+        # Check window
+        if project.get_project_object("window") != None: 
+
+            # Window update
+            project.get_project_object("window").update()
             
-            # Object update
-            for layer in range(min_update_layer, max_update_layer + 1):
-                for obj in objects:
-                    if obj.get_component("UI") == None and obj.update_layer == layer:
-                        obj.Update()
-            # UI update
-            for layer in range(min_update_layer, max_update_layer + 1):
-                for obj in objects:
-                    if obj.get_component("UI") != None and obj.update_layer == layer:
-                        obj.Update()
+            # Check scene
+            if project.get_project_object("scene") != None:
+                # Check camera
+                if (project.get_project_object("camera") != None):
+                
+                    # Object update
+                    for layer in range(min_update_layer, max_update_layer + 1):
+                        for name in project.get_project_object("scene").get_objects():
+                            obj = project.get_project_object("scene").get_obj(name)
+                            obj.Update()
 
 
-        # Buffers swap
-        pygame.display.flip()
+            # Buffers swap
+            pygame.display.flip()
         
 
     # Exit from project
