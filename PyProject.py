@@ -1,4 +1,5 @@
 # Import
+from tkinter import colorchooser
 import pygame
 import math
 import time
@@ -7,6 +8,37 @@ import random
 # Initialization
 pygame.init()
 pygame.font.init()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -58,6 +90,25 @@ def True_to_exception(value, error):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # ========== Vector 2
 class Vector2:
     
@@ -67,13 +118,24 @@ class Vector2:
         self.__x = x
         self.__y = y     
                
+
     # Return self
     def __call__(self, center = "CENTER"):
+        #
         if center == "LEFT_UP":
-            return (self.__x, self.__y)        
+            return (Vector2(self.x, self.y) + Vector2(-(program_objects["window"].transform.size/2).x, (program_objects["window"].transform.size/2).y))()
+        #
+        if center == "LEFT_DOWN":
+            return (Vector2(self.x, self.y) + Vector2(-(program_objects["window"].transform.size/2).x, -(program_objects["window"].transform.size/2).y))()
+        #
+        if center == "RIGHT_UP":
+            return (Vector2(self.x, self.y) + Vector2((program_objects["window"].transform.size/2).x, (program_objects["window"].transform.size/2).y))()
+        #
+        if center == "RIGHT_DOWN":
+            return (Vector2(self.x, self.y) + Vector2((program_objects["window"].transform.size/2).x, -(program_objects["window"].transform.size/2).y))()
+        #
         if center == "CENTER":
-            pos = self + program_objects["window"].transform.size/2
-            return (pos.x, pos.y)
+            return (self.__x, self.__y)     
 
 
     # Getters and setters
@@ -143,6 +205,7 @@ class Vector2:
 
 
 
+
 #   # ========== Color
 class Color:
     
@@ -175,6 +238,32 @@ class Color:
     blue = property(lambda self: self.__blue, set_blue)
     green = property(lambda self: self.__green, set_green)
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -322,13 +411,41 @@ class transform:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ========== PROGRAM CLASSES ==========
 
     # List of program objects
 program_objects = {
     "window" : None, "camera" : None
     }
-
 
 
 
@@ -347,7 +464,7 @@ class Window:
 
         # Link
         program_objects["window"] = self
-        self.__window = pygame.display.set_mode(self.transform.size("LEFT_UP"))
+        self.__window = pygame.display.set_mode(self.transform.size())
 
         # Set settings
         pygame.display.set_caption(self.__title)
@@ -385,8 +502,8 @@ class Window:
         if (self.window != None):
             
             # Size
-            if (self.window.get_size() != self.transform.size("LEFT_UP")):
-                self.__window = pygame.display.set_mode(self.transform.size("LEFT_UP"))
+            if (self.window.get_size() != self.transform.size()):
+                self.__window = pygame.display.set_mode(self.transform.size())
                 
             # Background
             self.window.fill(self.background_color())
@@ -413,6 +530,44 @@ class Camera:
         
 
  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -513,6 +668,44 @@ class Object:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ========== COMPONENTS ==========
 
 class component:
@@ -543,10 +736,22 @@ class component:
 
 #   # RENDER
 class render(component):
-    def update(self):
-        pos = self.object.transform.position()
+    # Initialization
+    def __init__(self):
+        self.__color = Color(255, 255, 255)
 
-        program_objects["window"].window.set_at((int(pos[0]), int(pos[1])), (255, 255, 255))
+    # Getters and Setters
+        # Setters
+    def set_color(self, color):
+        if False_to_exception(type(color, Color), "Type Error!!! color can be only Color"):
+            self.__color = color
+        # Set attributes
+    color = property(lambda self: self.__color, set_color)
+
+    # Update
+    def update(self):
+        pos = self.object.transform.position("RIGHT_UP")
+        program_objects["window"].window.set_at((int(pos[0]), int(pos[1])), self.color())
 
 
 #   # COLLIDER
@@ -557,6 +762,55 @@ class collider(component):
 #   # PHYSIC BODY
 class physic_body(component):
     pass
+
+
+
+
+#   # Text
+class text(component):
+    #
+    def __init__(self):
+        pass
+
+    def update(self):
+        font = pygame.font.Font(None, 72)
+        text = font.render("Hello Wold", True, (0, 100, 0))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -620,36 +874,40 @@ def Update():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ========== MODULS ==========
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     # ========== Math
 class Math:
@@ -748,9 +1006,6 @@ class Math:
 
 
 
-
-
-
 #    # ========== Time
 time_configs = {"start_time" : time.time()}
 last_frame_time = 0
@@ -829,26 +1084,11 @@ class Time:
 
 
 
-
-
-
-
-
-
-
-
 #  # ========== Random
 class Random:
     @staticmethod
     def range(min_, max_):
         return random.randint(min_, max_)
-
-
-
-
-
-
-
 
 
 
@@ -921,14 +1161,6 @@ class Input:
 
 
 
-
-
-
-
-
-
-
-
 class Physic:
     @staticmethod
     def Raycast(startPoint, direction, range_, step=1):
@@ -936,6 +1168,13 @@ class Physic:
         for i in range(0, range_, step):           
             points.append((startPoint + direction * i)())
         return points
+
+
+
+
+
+
+
 
 
 
