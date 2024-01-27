@@ -1,5 +1,4 @@
 # Import
-from tkinter import colorchooser
 import pygame
 import math
 import time
@@ -218,7 +217,7 @@ class Color:
         
     # Return self
     def __call__(self):
-        return (self.__red, self.__blue, self.__green)        
+        return (self.__red, self.__green, self.__blue)        
 
 
 
@@ -226,13 +225,13 @@ class Color:
         # Settters
     def set_red(self, red):
         if False_to_exception(type(red, int), "Type error!!! This attribute can be only int!!!"):
-            self.__red = red
+            self.__red = Math.clamp(red, 0, 255)
     def set_blue(self, blue):
         if False_to_exception(type(blue, int), "Type error!!! This attribute can be only int!!!"):
-            self.__blue = blue
+            self.__blue = Math.clamp(blue, 0, 255)
     def set_green(self, green):
         if False_to_exception(type(green, int), "Type error!!! This attribute can be only int!!!"):
-            self.__green = green
+            self.__green = Math.clamp(green, 0, 255)
         # Register attributes
     red = property(lambda self: self.__red, set_red)
     blue = property(lambda self: self.__blue, set_blue)
@@ -720,6 +719,10 @@ class component:
     def update(self):
         pass
     
+    #
+    def fixed_update(self):
+        pass
+    
     # Whet you delete
     def delete(self):
         pass
@@ -770,11 +773,30 @@ class physic_body(component):
 class text(component):
     #
     def __init__(self):
-        pass
+        self.__text = "text"
+
+        self.__color = Color(255, 255, 255)
+        self.__size = 25
+    
+    # Getters and Setters
+        # Setters
+    def set_text(self, text):
+        self.__text = str(text)
+    def set_color(self, color):
+        if False_to_exception(type(color, Color), "Type Error!!! Color can be only Color"):
+            self.__color = color
+    def set_size(self, size):
+        if False_to_exception(type(size, int) or type(size, float), "Type Error!!! Size can be only int or float"):
+            self.__size = size
+        # Set attributes
+    text = property(lambda self: self.__text, set_text)
+    color = property(lambda self: self.__color, set_color)
+    size = property(lambda self: self.__size, set_size)
 
     def update(self):
-        font = pygame.font.Font(None, 72)
-        text = font.render("Hello Wold", True, (0, 100, 0))
+        font = pygame.font.Font(None, int(self.__size))
+        text = font.render(self.__text, True, self.__color())
+        program_objects["window"].window.blit(text, self.object.transform.position("RIGHT_UP"))
 
 
 
