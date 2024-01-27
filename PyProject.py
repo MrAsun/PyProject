@@ -4,17 +4,6 @@ import math
 import time
 import random
 
-# Register
-    #
-from Addition import Vector2
-from Addition import Color
-    #
-from Moduls import Input
-from Moduls import Math
-from Moduls import Random
-from Moduls import Time
-
-
 # Initialization
 pygame.init()
 pygame.font.init()
@@ -32,15 +21,16 @@ pygame.font.init()
 # ======== ADITION FUNCTIONS ================
 #   # Type checking
 def type(variable, type):
-        if isinstance(variable, type):
-            return True
-        return False
+     if isinstance(variable, type):
+        return True
+     return False
 
-#   # Exceptions
+# Exceptions
 def False_to_exception(value, error):
     if not value:
         raise Exception(error)
     return True
+
 def True_to_exception(value, error):
     if value:
         raise Exception(error)
@@ -54,6 +44,143 @@ def position_to_World(pos):
 def pos_to_world(pos):
     if False_to_exception(type(pos, Vector2), ""):
         return pos + program_objects["window"].transform.size/2 - program_objects["camera"].transform.position
+
+
+
+
+
+        # ========== Vector 2
+class Vector2:
+    
+    # Initialization
+    def __init__(self, x, y):
+        # Attributes
+        self.__x = x
+        self.__y = y     
+               
+    # Return self
+    def __call__(self):
+        return (self.__x, self.__y)        
+
+
+    # Getters and setters
+        # Setters
+    def set_x(self, x):
+        if False_to_exception(type(x, int) or type(x, float), "Type error!!! This attribute can be only int or float!!!"):
+            self.__x = x        
+    def set_y(self, y):
+        if False_to_exception(type(y, int) or type(y, float), "Type error!!! This attribute can be only int or float!!!"):
+            self.__y = y  
+        # Set attributes
+    x = property(lambda self: self.__x, set_x)
+    y = property(lambda self: self.__y, set_y)
+
+
+    # Arithmetic
+    def __add__(self, other):
+        if type(other, Vector2):
+            return Vector2(self.__x + other.__x, self.__y + other.__y)
+        if type(other, int) or type(other, float):
+            return Vector2(self.__x + other, self.__y + other)
+    def __sub__(self, other):
+        if type(other, Vector2):
+            return Vector2(self.__x - other.__x, self.__y - other.__y)
+        if type(other, int) or type(other, float):
+            return Vector2(self.__x - other, self.__y - other)
+    def __truediv__(self, other):
+        if type(other, Vector2):
+            return Vector2(self.__x / other.__x, self.__y / other.__y)
+        if type(other, int) or type(other, float):
+            return Vector2(self.__x / other, self.__y / other)
+    def __mul__(self, other):
+        if type(other, Vector2):
+            return Vector2(self.__x * other.__x, self.__y * other.__y)
+        if type(other, int) or type(other, float):
+            return Vector2(self.__x * other, self.__y * other)
+
+
+
+    # Addition
+        # Distance
+    @staticmethod
+    def distance(pos1, pos2):
+        return math.sqrt((pos2.x - pos1.x) ** 2 + (pos2.y- pos1.y) ** 2)
+        # Axis
+    @staticmethod
+    def Up():
+        return Vector2(0, 1)
+    @staticmethod
+    def Down():
+        return Vector2(0, -1)
+    @staticmethod
+    def Right():
+        return Vector2(1, 0)
+    @staticmethod
+    def Left():
+        return Vector2(-1, 0)
+        # Get direction
+    @staticmethod
+    def Direction(angle):
+        return Vector2(Math.cos(angle), Math.sin(angle))
+
+
+
+
+
+
+
+
+
+#   # ========== Color
+class Color:
+    
+    # Initialization
+    def __init__(self, red, blue, green):
+        # Attributes
+        self.__red = Math.clamp(red, 0, 255)
+        self.__blue = Math.clamp(blue, 0, 255)
+        self.__green = Math.clamp(green, 0, 255)
+        
+    # Return self
+    def __call__(self):
+        return (self.__red, self.__blue, self.__green)        
+
+
+
+    # Getters and setter
+        # Settters
+    def set_red(self, red):
+        if False_to_exception(type(red, int), "Type error!!! This attribute can be only int!!!"):
+            self.__red = red
+    def set_blue(self, blue):
+        if False_to_exception(type(blue, int), "Type error!!! This attribute can be only int!!!"):
+            self.__blue = blue
+    def set_green(self, green):
+        if False_to_exception(type(green, int), "Type error!!! This attribute can be only int!!!"):
+            self.__green = green
+        # Register attributes
+    red = property(lambda self: self.__red, set_red)
+    blue = property(lambda self: self.__blue, set_blue)
+    green = property(lambda self: self.__green, set_green)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -510,6 +637,293 @@ def Update():
 
 
 
+
+
+    # ========== Math
+class Math:
+    # Variables
+    def clamp(value, min_, max_):
+        if value < min_:
+            return min_
+        if value > max_:
+            return max_
+        return value
+            
+    
+
+  
+    # ===== Angle
+    @staticmethod
+    def radians(degrees):
+        return math.radians(degrees)
+    @staticmethod
+    def degrees(radians):
+        return math.degrees(radians)
+    @staticmethod
+    def get_angle(cos, sin):
+            angle = Math.arccos(Math.abs(cos)) 
+                    
+            if cos > 0 and sin > 0:
+                angle = angle + 0
+            if cos < 0 and sin > 0:
+                angle = angle + 90
+            if cos < 0 and sin < 0:
+                angle = angle + 180
+            if cos > 0 and sin < 0:
+                angle = angle + 270
+    
+            return angle
+
+    # ===== sin/cos and arcsin/arccos
+
+        # sin (rad)
+    @staticmethod
+    def sin_rad(angle):
+        return math.sin(angle)
+        # cos (rad)
+    @staticmethod
+    def cos_rad(angle):
+        return math.cos(angle)
+
+            # arcsin (rad)
+    @staticmethod
+    def arcsin_rad(angle):
+        return math.asin(angle)
+        # arccos (rad)
+    @staticmethod
+    def arcco_rads(angle):
+        return math.acos(angle)
+    
+
+
+         # sin
+    @staticmethod
+    def sin(angle):
+        result = math.sin(math.radians(angle))
+        return 0 if abs(result) < 1e-10 else result
+        # cos
+    @staticmethod
+    def cos(angle):
+        result = math.cos(math.radians(angle))
+        return 0 if abs(result) < 1e-10 else result    
+    
+        # arcsin
+    @staticmethod
+    def arcsin(angle):
+        return Math.degrees(math.asin(angle))
+        # arccos
+    @staticmethod
+    def arccos(angle):
+        return Math.degrees(math.acos(angle))
+    
+
+
+    @staticmethod
+    def abs(n):
+        if n < 0:
+            return -n
+        return n
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#    # ========== Time
+time_configs = {"start_time" : time.time()}
+last_frame_time = 0
+
+class Time:    
+    # ===== Main time management
+        # Get time of start
+    @staticmethod
+    def all_time():
+        return time_configs["start_time"]
+        # Get time with start
+    @staticmethod
+    def time():
+        return time.time() - time_configs["start_time"]
+        # Waiting for current time
+    @staticmethod
+    def wait(time):
+        timePoint = Time.time_point()
+        while True:
+            if timePoint.timer(time):
+                return True;
+
+    @staticmethod
+    def delta_time():
+        current_time = Time.time()
+        global last_frame_time
+        delta_time = current_time - last_frame_time
+        last_frame_time = Time.time()
+        return delta_time
+
+    # Point in the time
+    class time_point:
+        # Attributes
+        ticks = 0
+        
+        # Initialization
+        def __init__(self):
+            self.reset()
+            
+        # Reset ticks
+        def reset(self):
+            self.ticks = Time.time()
+        
+        # Get delta time
+        def delta_time(self, reset = False):
+
+			# Save delta
+            delta = Time.time() - self.ticks
+
+			# Reset
+            if (reset):
+                self.reset()
+
+			# Return
+            return delta
+
+		# Timer(float currentTime - time for timer, bool reset - return and reset ticks)
+        def timer(self, current_time, reset = False):
+
+			# Save delta
+            delta = self.delta_time()
+
+			# Reset
+            if reset and delta > current_time:
+                self.reset()
+
+			# Return 
+            return delta > current_time
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#  # ========== Random
+class Random:
+    @staticmethod
+    def range(min_, max_):
+        return random.randint(min_, max_)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#    # ========== Input
+class Input:
+    # List of keys
+    keys = {
+        #
+        "Q" : pygame.K_q, "W" : pygame.K_w, "E" : pygame.K_e, "R" : pygame.K_r, "T" : pygame.K_t,
+        "Y" : pygame.K_y, "U" : pygame.K_u, "I" : pygame.K_i, "O" : pygame.K_o, "P" : pygame.K_p,
+        "A" : pygame.K_a, "S" : pygame.K_s, "D" : pygame.K_d, "F" : pygame.K_f, "G" : pygame.K_g,
+        
+        #
+        }
+    
+    # List of buttons
+    buttons = {
+        "RMB" : (pygame.MOUSEBUTTONUP, 0)
+        }
+
+
+
+
+    # Get key
+    @staticmethod
+    def get_key(key):
+        #
+        if key in Input.keys:
+            keys = pygame.key.get_pressed()
+            return keys[Input.keys[key]]
+    
+        #
+        if key in Input.buttons:
+            buttons = pygame.mouse.get_pressed()
+            print(pygame.MOUSEBUTTON)
+    
+
+
+
+    # Get axis of 2 keys
+    @staticmethod
+    def get_axis(min_key, max_key, type = "prefer 1"):
+        
+        #
+        if type == "prefer 1":
+            if Input.get_key(min_key):
+                return -1
+            if Input.get_key(max_key):
+                return 1
+            return 0
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Physic:
+    @staticmethod
+    def Raycast(startPoint, direction, range_, step=1):
+        points = list()
+        for i in range(0, range_, step):           
+            points.append((startPoint + direction * i)())
+        return points
 
 
 
