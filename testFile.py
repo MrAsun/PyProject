@@ -9,6 +9,8 @@ camera = Camera()
 camera.set_main()
 
 
+obj = Object()
+obj.add_component("render", render())
 
 
 while Update():

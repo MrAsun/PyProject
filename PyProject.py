@@ -41,13 +41,6 @@ def True_to_exception(value, error):
     return False
 
 
-def position_to_World(pos):
-    if False_to_exception(type(pos, Vector2), "Type Error!!! Pos can be only Vector2"):
-        return pos + program_objects["window"].transform.size/2
-#   # Positions
-def pos_to_world(pos):
-    if False_to_exception(type(pos, Vector2), ""):
-        return pos + program_objects["window"].transform.size/2 - program_objects["camera"].transform.position
 
 
 
@@ -75,8 +68,12 @@ class Vector2:
         self.__y = y     
                
     # Return self
-    def __call__(self):
-        return (self.__x, self.__y)        
+    def __call__(self, center = "CENTER"):
+        if center == "LEFT_UP":
+            return (self.__x, self.__y)        
+        if center == "CENTER":
+            pos = self + program_objects["window"].transform.size/2
+            return (pos.x, pos.y)
 
 
     # Getters and setters
@@ -350,7 +347,7 @@ class Window:
 
         # Link
         program_objects["window"] = self
-        self.__window = pygame.display.set_mode(self.transform.size())
+        self.__window = pygame.display.set_mode(self.transform.size("LEFT_UP"))
 
         # Set settings
         pygame.display.set_caption(self.__title)
@@ -388,8 +385,8 @@ class Window:
         if (self.window != None):
             
             # Size
-            if (self.window.get_size() != self.transform.size()):
-                self.__window = pygame.display.set_mode(self.transform.size())
+            if (self.window.get_size() != self.transform.size("LEFT_UP")):
+                self.__window = pygame.display.set_mode(self.transform.size("LEFT_UP"))
                 
             # Background
             self.window.fill(self.background_color())
@@ -483,7 +480,7 @@ class Object:
         return None
         # Add new component
     def add_component(self, title, component_):
-        component_.object_ = self
+        component_.object = self
         self.__components[title] = component_
         component_.start()
         # Delete component
@@ -547,9 +544,9 @@ class component:
 #   # RENDER
 class render(component):
     def update(self):
-        pos = position_to_World(self.object.transform.position)
+        pos = self.object.transform.position()
 
-        program_objects["window"].window.set_at((int(pos.x), int(pos.y)), (255, 255, 255))
+        program_objects["window"].window.set_at((int(pos[0]), int(pos[1])), (255, 255, 255))
 
 
 #   # COLLIDER
