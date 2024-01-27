@@ -18,6 +18,10 @@ pygame.font.init()
 
 
 
+
+
+
+
 # ======== ADITION FUNCTIONS ================
 #   # Type checking
 def type(variable, type):
@@ -44,6 +48,18 @@ def position_to_World(pos):
 def pos_to_world(pos):
     if False_to_exception(type(pos, Vector2), ""):
         return pos + program_objects["window"].transform.size/2 - program_objects["camera"].transform.position
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -122,7 +138,6 @@ class Vector2:
     @staticmethod
     def Direction(angle):
         return Vector2(Math.cos(angle), Math.sin(angle))
-
 
 
 
