@@ -1009,6 +1009,8 @@ class Math:
 #    # ========== Time
 time_configs = {"start_time" : time.time()}
 last_frame_time = 0
+delta_time = 0
+fps = 0
 
 class Time:    
     # ===== Main time management
@@ -1032,8 +1034,11 @@ class Time:
     def delta_time():
         current_time = Time.time()
         global last_frame_time
-        delta_time = current_time - last_frame_time
+        global delta_time
+        a = current_time - last_frame_time
         last_frame_time = Time.time()
+        if a != 0:
+            delta_time = a
         return delta_time
 
     # Point in the time
