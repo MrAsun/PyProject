@@ -215,13 +215,16 @@ class Window:
 #   # ========== SCENE
 class Scene:
     # Initialization
-    def __init__(self, name):
+    def __init__(self, name, auto_load = True):
         # Attributes
         self.__name = name
         self.__objects = {}
+        
 
+        
         # Set
-        self.load()
+        if auto_load:
+            self.load()
     
     # Getters and Setters
         # Setters
@@ -1136,7 +1139,7 @@ class Time:
         timePoint = Time.time_point()
         while True:
             if timePoint.timer(time):
-                return True;
+                return True
 
     @staticmethod
     def delta_time():
