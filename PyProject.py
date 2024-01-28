@@ -99,7 +99,7 @@ ERRORS = {
 project = None
 class Project:
     __project_objects = {"window" : None, "camera" : None, "scene" : None}
-
+    config = {"fixed update time" : 2, "razmer chlena" : 26, "max fps" : 5, "limited fps" : True}
 
     # Initialization
     def __init__(self):
@@ -682,7 +682,7 @@ class Object:
         self.__components = { }
         self.__transform = transform()
         self.__update_layer = 0
-        
+        self.__last_fixed_update_time = 0
         
         # Register
         if False_to_exception(project != None, ERRORS["Project_exists"]):
@@ -742,8 +742,12 @@ class Object:
         for component_ in self.__components:
             component = self.__components[component_]
             if component != None:
-                if component.enabled:
+                if component.enabled:                   
                     component.update()
+
+                    if self.__last_fixed_update_time + project.config["fixed update time"] <= Time.time():
+                        self.__last_fixed_update_time = Time.time()
+                        component.fixed_update()
 
 
          
@@ -813,7 +817,7 @@ class component:
     def fixed_update(self):
         pass
     
-    # Whet you delete
+    # What you delete
     def delete(self):
         pass
     
@@ -935,17 +939,17 @@ class text(component):
 
 
 # ========== MAIN FUNCTIONS ==========
-
+last_update_time = 0
 def Update():
     # Check project
     if project != None:
-        
-        # Check window
+                    # Check window
         if project.get_project_object("window") != None: 
 
-            # Window update
+                # Window update
             project.get_project_object("window").update()
             
+            Time.set_delta_time()
             # Check scene
             if project.get_project_object("scene") != None:
                 # Check camera
@@ -957,10 +961,11 @@ def Update():
                             obj = project.get_project_object("scene").get_obj(name)
                             obj.Update()
 
-
-            # Buffers swap
-            pygame.display.flip()
         
+                # Buffers swap
+                pygame.display.flip()
+        
+    
 
     # Exit from project
     for event in pygame.event.get():
@@ -1118,21 +1123,22 @@ class Math:
 
 
 #    # ========== Time
-time_configs = {"start_time" : time.time()}
 last_frame_time = 0
+save_time = 0
 delta_time = 0
-fps = 0
-
 class Time:    
     # ===== Main time management
         # Get time of start
     @staticmethod
     def all_time():
-        return time_configs["start_time"]
+        return int((time.time() * 100) * 1000) / 1000
         # Get time with start
     @staticmethod
+    def start_time():
+        return time_configs["start_time"]
+    @staticmethod
     def time():
-        return time.time() - time_configs["start_time"]
+        return (Time.all_time() - Time.start_time())
         # Waiting for current time
     @staticmethod
     def wait(time):
@@ -1142,15 +1148,22 @@ class Time:
                 return True
 
     @staticmethod
-    def delta_time():
-        current_time = Time.time()
+    def set_delta_time():
+        global save_time
         global last_frame_time
         global delta_time
-        a = current_time - last_frame_time
-        last_frame_time = Time.time()
-        if a != 0:
-            delta_time = a
-        return delta_time
+        if Time.time() != last_frame_time:
+            delta_time = Time.time() - last_frame_time
+            last_frame_time = Time.time()
+
+        else:
+            delta_time = last_frame_time - save_time 
+            last_frame_time = save_time
+            save_time = Time.time()
+    
+    @staticmethod
+    def delta_time():
+       return delta_time
 
     # Point in the time
     class time_point:
@@ -1191,7 +1204,7 @@ class Time:
 			# Return 
             return delta > current_time
 
-
+time_configs = {"start_time" : Time.all_time()}
 
 
 
