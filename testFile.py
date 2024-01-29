@@ -11,25 +11,16 @@ window.transform.size = Vector2(500, 400)
 camera = Camera()
 camera.set_main()
 
+class player(component):
+    def fixed_update(self):
+        pass
 
-
-
-scene = Scene(0)
-obj = Object()
-obj.transform.position = Vector2(0, 0)
-obj.add_component("text", text())
-
-
-scene2 = Scene(1)
-obj2 = Object()
-obj2.transform.position = Vector2(100, 100)
-obj2.add_component("text", text())
+obj = Object() 
+obj.add_component("pizda", player())
 
 
 
 
 while Update():
-    if Input.get_key("Q"):
-        scene.load()
     if Input.get_key("W"):
-        scene2.load()
+        print(Time.delta_time())
