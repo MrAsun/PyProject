@@ -23,4 +23,4 @@ obj.add_component("pizda", player())
 
 while Update():
     if Input.get_key("W"):
-        print(Time.delta_time())
+        window.transform.size.x += 0.1

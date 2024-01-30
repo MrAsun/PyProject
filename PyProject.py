@@ -95,6 +95,11 @@ ERRORS = {
 
 
 
+
+
+
+
+
 #   # ========== PROJECT
 project = None
 class Project:
@@ -321,9 +326,9 @@ class Camera:
 
 
 
+# ADDITION CLASSES
 
-
-        # ========== Vector 2
+#   # ========== Vector 2
 class Vector2:
     
     # Initialization
@@ -331,24 +336,25 @@ class Vector2:
         # Attributes
         self.__x = x
         self.__y = y     
+        self.center = "CENTER"
                
 
     # Return self
-    def __call__(self, center = "CENTER"):
+    def __call__(self, center):
         #
-        if center == "LEFT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
+        if self.center == "LEFT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
             return (Vector2(self.x, self.y) + Vector2(-(project.get_project_object("window").transform.size/2).x, (project.get_project_object("window").transform.size/2).y))()
         #
-        if center == "LEFT_DOWN" and False_to_exception(project != None, ERRORS["Project_exists"]):
+        if self.center == "LEFT_DOWN" and False_to_exception(project != None, ERRORS["Project_exists"]):
             return (Vector2(self.x, self.y) + Vector2(-(project.get_project_object("window").transform.size/2).x, -(project.get_project_object("window").transform.size/2).y))()
         #
-        if center == "RIGHT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
+        if self.center == "RIGHT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
             return (Vector2(self.x, self.y) + Vector2((project.get_project_object("window").transform.size/2).x, (project.get_project_object("window").transform.size/2).y))()
         #
-        if center == "RIGHT_DOWN" and False_to_exception(project != None, ERRORS["Project_exists"]):
+        if self.center == "RIGHT_DOWN" and False_to_exception(project != None, ERRORS["Project_exists"]):
             return (Vector2(self.x, self.y) + Vector2((project.get_project_object("window").transform.size/2).x, -(project.get_project_object("window").transform.size/2).y))()
         #
-        if center == "CENTER":
+        if self.center == "CENTER":
             return (self.__x, self.__y)     
 
 
