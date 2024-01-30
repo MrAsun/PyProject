@@ -340,21 +340,21 @@ class Vector2:
                
 
     # Return self
-    def __call__(self):
+    def __call__(self, center = "CENTER"):
         #
-        if self.center == "LEFT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
+        if center == "LEFT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
             return (Vector2(self.x, self.y) + Vector2(-(project.get_project_object("window").transform.size/2).x, (project.get_project_object("window").transform.size/2).y))()
         #
-        if self.center == "LEFT_DOWN" and False_to_exception(project != None, ERRORS["Project_exists"]):
+        if center == "LEFT_DOWN" and False_to_exception(project != None, ERRORS["Project_exists"]):
             return (Vector2(self.x, self.y) + Vector2(-(project.get_project_object("window").transform.size/2).x, -(project.get_project_object("window").transform.size/2).y))()
         #
-        if self.center == "RIGHT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
+        if center == "RIGHT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
             return (Vector2(self.x, self.y) + Vector2((project.get_project_object("window").transform.size/2).x, (project.get_project_object("window").transform.size/2).y))()
         #
-        if self.center == "RIGHT_DOWN" and False_to_exception(project != None, ERRORS["Project_exists"]):
+        if center == "RIGHT_DOWN" and False_to_exception(project != None, ERRORS["Project_exists"]):
             return (Vector2(self.x, self.y) + Vector2((project.get_project_object("window").transform.size/2).x, -(project.get_project_object("window").transform.size/2).y))()
         #
-        if self.center == "CENTER":
+        if center == "CENTER":
             return (self.__x, self.__y)     
 
 
@@ -458,6 +458,13 @@ class Color:
     
 
 
+#   # Image
+class Image:
+    image = None
+    
+
+    def __init__(self, path):
+        self.image = pygame.image.load(path)
 
 
 
@@ -842,6 +849,7 @@ class render(component):
     # Initialization
     def __init__(self):
         self.__color = Color(255, 255, 255)
+        self.image = None
 
     # Getters and Setters
         # Setters
@@ -855,6 +863,10 @@ class render(component):
     def update(self):
         pos = self.object.transform.position("RIGHT_UP")
         project.get_project_object("window").window.set_at((int(pos[0]), int(pos[1])), self.color())
+        if self.image != None:
+            rotated_image = pygame.transform.rotate(self.image.image, self.object.transform.rotation)
+            size_image = pygame.transform.scale(rotated_image, (Math.absolute(self.object.transform.size()[0]), Math.absolute(self.object.transform.size()[0])))
+            project.get_project_object("window").window.blit(size_image, self.object.transform.position("RIGHT_UP"))
 
 
 #   # COLLIDER
@@ -1111,7 +1123,7 @@ class Math:
 
 
     @staticmethod
-    def abs(n):
+    def absolute(n):
         if n < 0:
             return -n
         return n
