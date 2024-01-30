@@ -340,7 +340,7 @@ class Vector2:
                
 
     # Return self
-    def __call__(self, center):
+    def __call__(self):
         #
         if self.center == "LEFT_UP" and False_to_exception(project != None, ERRORS["Project_exists"]):
             return (Vector2(self.x, self.y) + Vector2(-(project.get_project_object("window").transform.size/2).x, (project.get_project_object("window").transform.size/2).y))()
