@@ -3,6 +3,7 @@ import pygame
 import math
 import time
 import random
+import os
 
 # Initialization
 pygame.init()
@@ -464,7 +465,8 @@ class Image:
     
 
     def __init__(self, path):
-        self.image = pygame.image.load(path)
+        path_dir = os.path.dirname(os.path.realpath(__file__))
+        self.image = pygame.image.load(path_dir + "/" + path)
 
 
 
