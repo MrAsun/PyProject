@@ -785,6 +785,49 @@ class Object:
 
 
 
+# MAIN OBJECTS TYPE
+class Objects:
+    #   # ADDITION
+    # Empty
+    @staticmethod
+    def Empty():
+        #
+        return Object()
+    
+
+
+    #   # SHAPES
+    # Square
+    @staticmethod
+    def Square():
+        obj = Object()
+
+        obj.add_component("render", render())
+        obj.add_component("collider", collider())
+        
+        obj.get_component("render").image = Image("square.png")
+        
+        #
+        return obj
+
+
+
+    #   # MEMES
+    @staticmethod
+    def Cot():
+        obj = Object()
+
+        obj.add_component("render", render())
+        obj.add_component("collider", collider())
+        
+        obj.get_component("render").image = Image("Cot.jpg")
+        
+        #
+        return obj
+
+
+
+
 
 
 
@@ -846,6 +889,8 @@ class component:
 
 
 
+
+
 #   # RENDER
 class render(component):
     # Initialization
@@ -863,12 +908,17 @@ class render(component):
 
     # Update
     def update(self):
-        pos = self.object.transform.position("RIGHT_UP")
-        project.get_project_object("window").window.set_at((int(pos[0]), int(pos[1])), self.color())
+        #
         if self.image != None:
-            rotated_image = pygame.transform.rotate(self.image.image, self.object.transform.rotation)
-            size_image = pygame.transform.scale(rotated_image, (Math.absolute(self.object.transform.size()[0]), Math.absolute(self.object.transform.size()[0])))
-            project.get_project_object("window").window.blit(size_image, self.object.transform.position("RIGHT_UP"))
+            #
+            size_image = pygame.transform.scale(self.image.image, (Math.absolute(self.object.transform.size()[0]), Math.absolute(self.object.transform.size()[0])))
+            rot_image = pygame.transform.rotate(size_image, self.object.transform.rotation)
+            self.image.image.fill(self.color())
+            
+            #
+            rot_rect = rot_image.get_rect(center = self.object.transform.position("RIGHT_UP"))
+            project.get_project_object("window").window.blit(rot_image, rot_rect)
+
 
 
 #   # COLLIDER

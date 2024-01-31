@@ -16,36 +16,23 @@ camera.set_main()
 # Player Move
 class player_move(component):
     def update(self):
-        self.object.transform.position.x += Input.get_axis("A", "D") * self.object.get_component("speed_text").current_speed
-        self.object.transform.position.y += Input.get_axis("W", "S") * self.object.get_component("speed_text").current_speed
+        self.object.transform.rotation += Input.get_axis("A", "D") 
+        self.object.transform.size.x += Input.get_axis("W", "S") 
+        
 # Create player
-player = Object() 
+player = Objects.Square()
 player.transform.size = Vector2(100, 100)
 # Add Player Move
 player.add_component("player_move", player_move())
-# Import Player Image
-image = Image("Cot.jpg")
-# Set render and image
-player.add_component("render", render())
-player.get_component("render").image = image
-
-# Text behavior
-class speed_text(component):
-    current_speed = 2
-    def update(self):
-        self.current_speed += Input.get_axis("Q", "E") * 0.01
-# Add speed text
-player.add_component("speed_text", speed_text())
 
 
 
+obj = Objects.Square()
+obj.transform.position = Vector2(100, 300)
 
-#
-speed = Object()
-speed.transform.position = Vector2(-400, -300)
-speed.add_component("text", text())
+
 
 
 
 while Update():
-    speed.get_component("text").text = player.get_component("speed_text").current_speed
+    pass
