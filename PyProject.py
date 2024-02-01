@@ -786,6 +786,7 @@ class Object:
 
 
 # MAIN OBJECTS TYPE
+    # OBJECTS
 class Objects:
     #   # ADDITION
     # Empty
@@ -840,9 +841,26 @@ class Objects:
 
 
 
-
-
-
+#   # UI
+class UIElements:
+    #
+    @staticmethod
+    def Empty():
+        obj = Object()
+        
+        obj.add_component("UI", UI())
+        
+        return obj
+    
+    
+    # Text
+    @staticmethod
+    def Text():
+        obj = UIElements.Empty()
+        
+        obj.add_component("text", text())
+        
+        return obj
 
 
 
@@ -981,7 +999,14 @@ class text(component):
 
 
 
+class UI(component):
+    def start(self):
+        project.get_project_object("camera").transform.set_child_object(str(self.object), self.object)
+        
+    def delete(self):
+        project.get_project_object("camera").transform.set_child_object(str(self.object))
 
+   
 
 
 
@@ -1043,11 +1068,14 @@ def Update():
                 if (project.get_project_object("camera") != None):
                 
                     # Object update
-                    for layer in range(min_update_layer, max_update_layer + 1):
-                        for name in project.get_project_object("scene").get_objects():
-                            obj = project.get_project_object("scene").get_obj(name)
+                    for name in project.get_project_object("scene").get_objects():
+                        obj = project.get_project_object("scene").get_obj(name)
+                        if obj.get_component("UI") == None:
                             obj.Update()
-
+                    for name in project.get_project_object("scene").get_objects():
+                        obj = project.get_project_object("scene").get_obj(name)
+                        if obj.get_component("UI") != None:
+                            obj.Update()
         
                 # Buffers swap
                 pygame.display.flip()
