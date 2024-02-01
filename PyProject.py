@@ -822,7 +822,7 @@ class Objects:
         obj.add_component("render", render())
         obj.add_component("collider", collider())
         
-        obj.get_component("render").image = Image("Cot.jpg")
+        obj.get_component("render").image = Image("Cot.png")
         
         #
         return obj
