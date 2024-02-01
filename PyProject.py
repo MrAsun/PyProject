@@ -917,7 +917,6 @@ class render(component):
             #
             size_image = pygame.transform.scale(self.image.image, (Math.absolute(self.object.transform.size()[0]), Math.absolute(self.object.transform.size()[0])))
             rot_image = pygame.transform.rotate(size_image, self.object.transform.rotation)
-            self.image.image.fill(self.color())
             
             #
             rot_rect = rot_image.get_rect(center = self.object.transform.position("RIGHT_UP"))
