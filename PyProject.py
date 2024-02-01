@@ -826,6 +826,18 @@ class Objects:
         
         #
         return obj
+    
+    @staticmethod
+    def SblN():
+        obj = Object()
+
+        obj.add_component("render", render())
+        obj.add_component("collider", collider())
+        
+        obj.get_component("render").image = Image("SON.png")
+        
+        #
+        return obj
 
 
 
