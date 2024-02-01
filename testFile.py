@@ -20,7 +20,7 @@ class player_move(component):
         self.object.transform.size.x += Input.get_axis("W", "S") 
         
 # Create player
-player = Objects.Square()
+player = Objects
 player.transform.size = Vector2(100, 100)
 # Add Player Move
 player.add_component("player_move", player_move())
