@@ -1,6 +1,4 @@
 # Import
-from ast import List
-from turtle import position
 import pygame
 import math
 import time
@@ -869,10 +867,6 @@ class Verticie():
 
 
 
-
-
-
-
 # ========== COMPONENTS ==========
 
 class component:
@@ -941,7 +935,7 @@ class render(component):
 #   # COLLIDER
 class collider(component):
     def __init__(self):
-        self.__verticies = List()
+        self.__verticies = list()
         
     def add_verticies(self, verticie):
         self.__vericies.append(verticie)
