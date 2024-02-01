@@ -1,4 +1,6 @@
 # Import
+from ast import List
+from turtle import position
 import pygame
 import math
 import time
@@ -804,7 +806,9 @@ class Object:
 
 
 
-
+class Verticie():
+   def __init__(self):
+       self.position
 
 
 
@@ -871,9 +875,17 @@ class render(component):
             project.get_project_object("window").window.blit(size_image, self.object.transform.position("RIGHT_UP"))
 
 
+
+
 #   # COLLIDER
 class collider(component):
-    pass
+    def __init__(self):
+        self.__verticies = List()
+        
+    def add_verticies(self, verticie):
+        self.__vericies.append(verticie)
+    
+    
 
 
 #   # PHYSIC BODY
